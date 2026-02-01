@@ -3,11 +3,13 @@
 # dependencies
 node_modules/
 
+
 # Expo
 .expo/
 dist/
 web-build/
 expo-env.d.ts
+.firebase/
 
 # Native
 .kotlin/
@@ -32,6 +34,9 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
+.env.development
+.env.production
 
 # typescript
 *.tsbuildinfo

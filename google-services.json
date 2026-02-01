@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "109055600533",
+    "project_id": "remindanyone",
+    "storage_bucket": "remindanyone.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109055600533:android:2000300be04e43ffb4789c",
+        "android_client_info": {
+          "package_name": "com.wlodek14a.remindanyonefe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109055600533-ms8t817jkv0g4svccgu8okfon4l2bnlv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ0csKa7vPI6bqToa29sBLtMKzTwoi4kg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109055600533-ms8t817jkv0g4svccgu8okfon4l2bnlv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

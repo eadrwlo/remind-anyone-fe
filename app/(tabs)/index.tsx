@@ -1,98 +1,236 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { IconSymbol } from '@/components/ui/icon-symbol';
+import { Colors } from '@/constants/theme';
+import { useAuth } from '@/context/AuthContext';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import api from '@/services/api';
 
-export default function HomeScreen() {
+interface Reminder {
+  id: number;
+  title: string;
+  description?: string;
+  due_date: string;
+  severity: 'Low' | 'Medium' | 'High';
+  status: 'Created' | 'Completed';
+  creator_id: number;
+  recipient_id: number;
+}
+
+export default function RemindersScreen() {
+  const [reminders, setReminders] = useState<Reminder[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'received' | 'sent'>('received');
+  const { user } = useAuth();
+  const router = useRouter();
+  const colorScheme = useColorScheme();
+
+  const fetchReminders = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/reminders/');
+      setReminders(response.data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReminders();
+  }, []);
+
+  const filteredReminders = reminders.filter(r => {
+    if (activeTab === 'received') return r.recipient_id === user?.id;
+    return r.creator_id === user?.id;
+  });
+
+  const markCompleted = async (id: number) => {
+    try {
+      await api.put(`/reminders/${id}`, { status: 'Completed' });
+      fetchReminders();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const deleteReminder = async (id: number) => {
+    try {
+      await api.delete(`/reminders/${id}`);
+      fetchReminders();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const renderItem = ({ item }: { item: Reminder }) => (
+    <View style={styles.card}>
+      <View style={styles.cardHeader}>
+        <ThemedText type="defaultSemiBold" style={styles.title}>{item.title}</ThemedText>
+        <ThemedText style={[styles.severity, { color: getSeverityColor(item.severity) }]}>
+          {item.severity}
+        </ThemedText>
+      </View>
+
+      {item.description && <ThemedText style={styles.desc}>{item.description}</ThemedText>}
+
+      <ThemedText style={styles.date}>Due: {new Date(item.due_date).toLocaleString()}</ThemedText>
+
+      <View style={styles.actions}>
+        <ThemedText style={styles.status}>{item.status}</ThemedText>
+
+        {activeTab === 'received' && item.status !== 'Completed' && (
+          <TouchableOpacity onPress={() => markCompleted(item.id)} style={styles.actionBtn}>
+            <IconSymbol name="checkmark.circle" size={24} color="green" />
+          </TouchableOpacity>
+        )}
+
+        {activeTab === 'sent' && (
+          <TouchableOpacity onPress={() => deleteReminder(item.id)} style={styles.actionBtn}>
+            <IconSymbol name="trash" size={24} color="red" />
+          </TouchableOpacity>
+        )}
+      </View>
+    </View>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <ThemedView style={styles.container}>
+      <View style={styles.tabs}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'received' && styles.activeTab]}
+          onPress={() => setActiveTab('received')}>
+          <ThemedText style={activeTab === 'received' ? styles.activeTabText : undefined}>Incoming</ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'sent' && styles.activeTab]}
+          onPress={() => setActiveTab('sent')}>
+          <ThemedText style={activeTab === 'sent' ? styles.activeTabText : undefined}>Outgoing</ThemedText>
+        </TouchableOpacity>
+      </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      <FlatList
+        data={filteredReminders}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchReminders} />}
+        contentContainerStyle={styles.list}
+        ListEmptyComponent={<ThemedText style={styles.empty}>No reminders found.</ThemedText>}
+        extraData={activeTab} // ensure re-render on tab switch
+      />
+
+      <TouchableOpacity
+        style={[styles.fab, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}
+        onPress={() => router.push('/reminders/create')}
+      >
+        <IconSymbol name="plus" size={30} color={colorScheme === 'dark' ? 'black' : 'white'} />
+      </TouchableOpacity>
+    </ThemedView>
   );
 }
 
+const getSeverityColor = (severity: string) => {
+  switch (severity) {
+    case 'High': return 'red';
+    case 'Medium': return 'orange';
+    case 'Low': return 'green';
+    default: return 'gray';
+  }
+};
+
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    paddingTop: 50,
+  },
+  tabs: {
     flexDirection: 'row',
+    paddingHorizontal: 20,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingBottom: 10,
+  },
+  tab: {
+    marginRight: 20,
+    paddingBottom: 5,
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#0a7ea4',
+  },
+  activeTabText: {
+    color: '#0a7ea4',
+    fontWeight: 'bold',
+  },
+  list: {
+    padding: 20,
+    paddingBottom: 80, // for FAB
+  },
+  card: {
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: 'rgba(150, 150, 150, 0.1)',
+    marginBottom: 15,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  title: {
+    flex: 1,
+  },
+  severity: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  desc: {
+    marginBottom: 5,
+    fontSize: 14,
+    opacity: 0.8,
+  },
+  date: {
+    fontSize: 12,
+    opacity: 0.6,
+    marginBottom: 10,
+  },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    marginTop: 5,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  status: {
+    fontWeight: 'bold',
+    fontSize: 12,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  actionBtn: {
+    padding: 5,
+  },
+  fab: {
     position: 'absolute',
+    right: 20,
+    bottom: 30,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
+  empty: {
+    textAlign: 'center',
+    marginTop: 50,
+    opacity: 0.5,
+  }
 });
