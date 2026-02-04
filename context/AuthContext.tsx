@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const signIn = async (idToken: string) => {
         try {
             setIsLoading(true);
-            console.log('Signing in with token', idToken);
             const response = await api.post('/auth/login', { id_token: idToken });
             const { access_token } = response.data;
 

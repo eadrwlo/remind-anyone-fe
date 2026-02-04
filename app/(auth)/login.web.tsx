@@ -12,18 +12,16 @@ export default function LoginScreen() {
     const { signIn, user, isLoading } = useAuth();
     const router = useRouter();
 
-    const requestScheme = 'com.googleusercontent.apps.109055600533-4p97gnb7hggs6c99r2f7r61sku2a7gif';
-
     const [request, response, promptAsync] = Google.useAuthRequest({
         clientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID,
-        androidClientId: process.env.EXPO_PUBLIC_ANDROID_CLIENT_ID,
-        redirectUri: makeRedirectUri({
-            scheme: requestScheme,
-            path: 'oauthredirect'
-        }),
         scopes: ['profile', 'email', 'openid'],
         responseType: ResponseType.IdToken,
+        redirectUri: makeRedirectUri({
+            preferLocalhost: true,
+        }),
     });
+
+    console.log('Google Auth Request:', JSON.stringify(request, null, 2));
 
     useEffect(() => {
         if (request) {
