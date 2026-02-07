@@ -10,6 +10,7 @@ import 'react-native-reanimated';
 
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { registerForPushNotificationsAsync } from '@/services/notifications';
 
 // Handle auth redirects globally (needed for Web popup flows)
 WebBrowser.maybeCompleteAuthSession();
@@ -46,6 +47,12 @@ function RootLayoutNav() {
       router.replace('/(tabs)');
     }
   }, [user, segments, isAuthLoading, loaded]);
+
+  useEffect(() => {
+    if (user) {
+      registerForPushNotificationsAsync().then(token => !!token);
+    }
+  }, [user]);
 
   if (isAuthLoading || !loaded) return null; // Or a loading screen
 

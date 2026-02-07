@@ -21,8 +21,6 @@ export default function LoginScreen() {
         }),
     });
 
-    console.log('Google Auth Request:', JSON.stringify(request, null, 2));
-
     useEffect(() => {
         if (request) {
             // Request loaded
