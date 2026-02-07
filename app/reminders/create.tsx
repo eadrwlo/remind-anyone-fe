@@ -1,6 +1,7 @@
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Button, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Button, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -14,7 +15,10 @@ interface Friend {
 export default function CreateReminderScreen() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [dueDate, setDueDate] = useState(''); // Text input for now
+    const [date, setDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showTimePicker, setShowTimePicker] = useState(false);
+
     const [severity, setSeverity] = useState('Medium');
     const [selectedFriendId, setSelectedFriendId] = useState<number | null>(null);
 
@@ -28,15 +32,36 @@ export default function CreateReminderScreen() {
         const now = new Date();
         const tomorrow = new Date(now);
         tomorrow.setDate(tomorrow.getDate() + 1);
-
-        // Format to YYYY-MM-DDTHH:mm based on LOCAL time
-        // The trick: shift time by timezone offset, then use toISOString
-        const offset = tomorrow.getTimezoneOffset() * 60000;
-        const localDate = new Date(tomorrow.getTime() - offset);
-        setDueDate(localDate.toISOString().slice(0, 16));
+        setDate(tomorrow);
 
         fetchFriends();
     }, []);
+
+    const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date) => {
+        if (event.type === 'dismissed') {
+            setShowDatePicker(false);
+            return;
+        }
+
+        const currentDate = selectedDate || date;
+        setShowDatePicker(false);
+        setDate(currentDate);
+
+        // On Android, after selecting date, we might want to show time picker
+        if (Platform.OS === 'android') {
+            setShowTimePicker(true);
+        }
+    };
+
+    const onChangeTime = (event: DateTimePickerEvent, selectedDate?: Date) => {
+        if (event.type === 'dismissed') {
+            setShowTimePicker(false);
+            return;
+        }
+        const currentDate = selectedDate || date;
+        setShowTimePicker(false);
+        setDate(currentDate);
+    };
 
     const fetchFriends = async () => {
         try {
@@ -48,7 +73,7 @@ export default function CreateReminderScreen() {
     };
 
     const createReminder = async () => {
-        if (!title || !dueDate || !selectedFriendId) {
+        if (!title || !selectedFriendId) {
             Alert.alert('Error', 'Please fill all required fields');
             return;
         }
@@ -58,7 +83,7 @@ export default function CreateReminderScreen() {
             await api.post('/reminders/', {
                 title,
                 description,
-                due_date: new Date(dueDate).toISOString(),
+                due_date: date.toISOString(),
                 severity,
                 recipient_id: selectedFriendId
             });
@@ -68,6 +93,12 @@ export default function CreateReminderScreen() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const toLocalISOString = (date: Date) => {
+        const tzOffset = date.getTimezoneOffset() * 60000;
+        const localDate = new Date(date.getTime() - tzOffset);
+        return localDate.toISOString().slice(0, 16);
     };
 
     return (
@@ -91,13 +122,58 @@ export default function CreateReminderScreen() {
                     multiline
                 />
 
-                <ThemedText style={styles.label}>Due Date (YYYY-MM-DDTHH:mm) *</ThemedText>
-                <TextInput
-                    style={styles.input}
-                    value={dueDate}
-                    onChangeText={setDueDate}
-                    placeholder="2023-01-01T12:00"
-                />
+                <ThemedText style={styles.label}>Due Date *</ThemedText>
+
+                {Platform.OS === 'web' ? (
+                    // @ts-ignore: React Native Web supports this but types might complain
+                    <input
+                        type="datetime-local"
+                        style={{
+                            padding: 10,
+                            borderRadius: 5,
+                            borderWidth: 1,
+                            borderColor: '#ccc',
+                            marginBottom: 15,
+                            fontSize: 16,
+                            fontFamily: 'inherit',
+                            width: '100%',
+                            boxSizing: 'border-box',
+                        }}
+                        value={toLocalISOString(date)}
+                        onChange={(e: any) => {
+                            const newDate = new Date(e.target.value);
+                            if (!isNaN(newDate.getTime())) {
+                                setDate(newDate);
+                            }
+                        }}
+                    />
+                ) : (
+                    <View>
+                        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateBtn}>
+                            <ThemedText style={styles.dateBtnText}>{date.toLocaleString()}</ThemedText>
+                        </TouchableOpacity>
+
+                        {showDatePicker && (
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={date}
+                                mode="date"
+                                is24Hour={true}
+                                onChange={onChangeDate}
+                            />
+                        )}
+
+                        {showTimePicker && (
+                            <DateTimePicker
+                                testID="timePicker"
+                                value={date}
+                                mode="time"
+                                is24Hour={true}
+                                onChange={onChangeTime}
+                            />
+                        )}
+                    </View>
+                )}
 
                 <ThemedText style={styles.label}>Severity</ThemedText>
                 <View style={styles.severityContainer}>
@@ -195,5 +271,16 @@ const styles = StyleSheet.create({
     },
     spacer: {
         height: 20,
+    },
+    dateBtn: {
+        padding: 15,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        marginBottom: 15,
+    },
+    dateBtnText: {
+        fontSize: 16,
     }
 });
