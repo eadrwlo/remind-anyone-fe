@@ -1,7 +1,8 @@
+import { AppButton } from '@/components/app-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useAuth } from '@/context/AuthContext';
-import { Button, Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 export default function ProfileScreen() {
     const { user, signOut } = useAuth();
@@ -22,7 +23,7 @@ export default function ProfileScreen() {
             )}
 
             <View style={styles.actions}>
-                <Button title="Sign Out" onPress={signOut} color="#ff4444" />
+                <AppButton title="Sign Out" onPress={signOut} color="#F44336" />
             </View>
         </ThemedView>
     );

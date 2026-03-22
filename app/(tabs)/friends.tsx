@@ -1,5 +1,6 @@
+import { AppButton } from '@/components/app-button';
 import { useEffect, useState } from 'react';
-import { Alert, Button, FlatList, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -57,7 +58,14 @@ export default function FriendsScreen() {
                     onChangeText={setNewFriendEmail}
                     autoCapitalize="none"
                 />
-                <Button title={loading ? "Adding..." : "Add"} onPress={addFriend} disabled={loading} />
+                <AppButton
+                    title={loading ? "Adding..." : "Add"}
+                    onPress={addFriend}
+                    disabled={loading}
+                    compact
+                    fullWidth={false}
+                    color="#4CAF50"
+                />
             </View>
 
             <FlatList

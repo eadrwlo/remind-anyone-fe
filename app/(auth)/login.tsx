@@ -1,8 +1,9 @@
+import { AppButton } from '@/components/app-button';
 import { useAuth } from '@/context/AuthContext';
 import { GoogleSignin, isErrorWithCode, statusCodes } from '@react-native-google-signin/google-signin';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
 
@@ -64,16 +65,18 @@ export default function LoginScreen() {
             <Text style={styles.title}>Remind Anyone</Text>
             <Text style={styles.subtitle}>Sign in to start sending reminders</Text>
 
-            <Button
+            <AppButton
                 disabled={isLoading}
                 title={isLoading ? "Signing in..." : "Sign in with Google"}
                 onPress={handleGoogleSignIn}
+                color="#4A90D9"
             />
-            {/* Fallback for development if Google ID not set */}
             {__DEV__ && (
-                <Button
+                <AppButton
                     title="Dev Login (Simulated)"
                     onPress={() => signIn("test-token")}
+                    color="#888"
+                    style={{ marginTop: 10 }}
                 />
             )}
 

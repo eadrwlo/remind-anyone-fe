@@ -1,10 +1,11 @@
+import { AppButton } from '@/components/app-button';
 import { useAuth } from '@/context/AuthContext';
 import { makeRedirectUri, ResponseType } from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useEffect } from 'react';
-import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -56,16 +57,18 @@ export default function LoginScreen() {
             <Text style={styles.title}>Remind Anyone</Text>
             <Text style={styles.subtitle}>Sign in to start sending reminders</Text>
 
-            <Button
+            <AppButton
                 disabled={!request || isLoading}
-                title={isLoading ? "Signing in..." : "Sign in with Google (Web)"}
+                title={isLoading ? "Signing in..." : "Sign in with Google"}
                 onPress={() => promptAsync()}
+                color="#4A90D9"
             />
-            {/* Fallback for development if Google ID not set */}
             {__DEV__ && (
-                <Button
+                <AppButton
                     title="Dev Login (Simulated)"
                     onPress={() => signIn("test-token")}
+                    color="#888"
+                    style={{ marginTop: 10 }}
                 />
             )}
 

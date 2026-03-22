@@ -1,7 +1,8 @@
+import { AppButton } from '@/components/app-button';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Button, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -111,7 +112,7 @@ export default function CreateReminderScreen() {
                     style={styles.input}
                     value={title}
                     onChangeText={setTitle}
-                    placeholder="Buy milk"
+                    placeholder="Reminder title"
                 />
 
                 <ThemedText style={styles.label}>Description</ThemedText>
@@ -177,15 +178,27 @@ export default function CreateReminderScreen() {
 
                 <ThemedText style={styles.label}>Severity</ThemedText>
                 <View style={styles.severityContainer}>
-                    {['Low', 'Medium', 'High'].map(s => (
-                        <TouchableOpacity
-                            key={s}
-                            style={[styles.severityBtn, severity === s && styles.severityBtnActive, { borderColor: getSeverityColor(s) }]}
-                            onPress={() => setSeverity(s)}
-                        >
-                            <ThemedText style={{ color: severity === s ? 'white' : getSeverityColor(s) }}>{s}</ThemedText>
-                        </TouchableOpacity>
-                    ))}
+                    {(['Low', 'Medium', 'High'] as const).map(s => {
+                        const color = getSeverityColor(s);
+                        const isActive = severity === s;
+                        return (
+                            <TouchableOpacity
+                                key={s}
+                                style={[
+                                    styles.severityBtn,
+                                    { borderColor: color, backgroundColor: isActive ? color : 'transparent' },
+                                ]}
+                                onPress={() => setSeverity(s)}
+                                activeOpacity={0.75}
+                            >
+                                <View style={[styles.severityDot, { backgroundColor: isActive ? 'rgba(255,255,255,0.7)' : color }]} />
+                                <ThemedText style={[
+                                    styles.severityLabel,
+                                    { color: isActive ? '#fff' : color },
+                                ]}>{s}</ThemedText>
+                            </TouchableOpacity>
+                        );
+                    })}
                 </View>
 
                 <ThemedText style={styles.label}>Select Friend *</ThemedText>
@@ -204,7 +217,12 @@ export default function CreateReminderScreen() {
 
                 <View style={styles.spacer} />
 
-                <Button title={loading ? "Creating..." : "Send Reminder"} onPress={createReminder} disabled={loading} />
+                <AppButton
+                    title={loading ? "Creating..." : "Send Reminder"}
+                    onPress={createReminder}
+                    disabled={loading}
+                    color="#0a7ea4"
+                />
             </ScrollView>
         </ThemedView>
     );
@@ -245,15 +263,23 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     severityBtn: {
-        padding: 10,
-        borderWidth: 1,
-        borderRadius: 5,
         flex: 1,
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        paddingVertical: 10,
+        borderWidth: 2,
+        borderRadius: 12,
     },
-    severityBtnActive: {
-        backgroundColor: '#333', // will be overridden by logic if needed, but text color handled inline
-        // actually let's use the color for bg
+    severityDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+    },
+    severityLabel: {
+        fontWeight: '700',
+        fontSize: 14,
     },
     friendsList: {
         gap: 5,
