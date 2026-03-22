@@ -70,31 +70,38 @@ export default function RemindersScreen() {
 
   const renderItem = ({ item }: { item: Reminder }) => (
     <View style={styles.card}>
-      <View style={styles.cardHeader}>
-        <ThemedText type="defaultSemiBold" style={styles.title}>{item.title}</ThemedText>
-        <ThemedText style={[styles.severity, { color: getSeverityColor(item.severity) }]}>
-          {item.severity}
-        </ThemedText>
-      </View>
+      <View style={[styles.severityBar, { backgroundColor: getSeverityColor(item.severity) }]} />
+      <View style={styles.cardContent}>
+        <View style={styles.cardHeader}>
+          <ThemedText type="defaultSemiBold" style={styles.title}>{item.title}</ThemedText>
+          {item.status === 'Completed' && (
+            <IconSymbol name="checkmark.circle.fill" size={18} color="green" style={styles.completedCheckmark} />
+          )}
+        </View>
 
-      {item.description && <ThemedText style={styles.desc}>{item.description}</ThemedText>}
+        {item.description && <ThemedText style={styles.desc}>{item.description}</ThemedText>}
 
-      <ThemedText style={styles.date}>Due: {new Date(item.due_date).toLocaleString()}</ThemedText>
+        <ThemedText style={styles.date}>Due: {new Date(item.due_date).toLocaleString()}</ThemedText>
 
-      <View style={styles.actions}>
-        <ThemedText style={styles.status}>{item.status}</ThemedText>
+        <View style={styles.actionsRow}>
+          <View style={styles.statusContainer}>
+            <IconSymbol name="bell.fill" size={18} color={Colors[colorScheme ?? 'light'].icon} />
+          </View>
 
-        {activeTab === 'received' && item.status !== 'Completed' && (
-          <TouchableOpacity onPress={() => markCompleted(item.id)} style={styles.actionBtn}>
-            <IconSymbol name="checkmark.circle" size={24} color="green" />
-          </TouchableOpacity>
-        )}
+          <View style={styles.actionButtons}>
+            {activeTab === 'received' && item.status !== 'Completed' && (
+              <TouchableOpacity onPress={() => markCompleted(item.id)} style={styles.actionBtn}>
+                <IconSymbol name="checkmark.circle" size={24} color="green" />
+              </TouchableOpacity>
+            )}
 
-        {activeTab === 'sent' && (
-          <TouchableOpacity onPress={() => deleteReminder(item.id)} style={styles.actionBtn}>
-            <IconSymbol name="trash" size={24} color="red" />
-          </TouchableOpacity>
-        )}
+            {activeTab === 'sent' && (
+              <TouchableOpacity onPress={() => deleteReminder(item.id)} style={styles.actionBtn}>
+                <IconSymbol name="trash" size={24} color="red" />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -136,10 +143,10 @@ export default function RemindersScreen() {
 
 const getSeverityColor = (severity: string) => {
   switch (severity) {
-    case 'High': return 'red';
-    case 'Medium': return 'orange';
-    case 'Low': return 'green';
-    default: return 'gray';
+    case 'High': return '#F44336';
+    case 'Medium': return '#FFC107';
+    case 'Low': return '#4CAF50';
+    default: return '#9E9E9E';
   }
 };
 
@@ -173,22 +180,33 @@ const styles = StyleSheet.create({
     paddingBottom: 80, // for FAB
   },
   card: {
-    padding: 15,
+    flexDirection: 'row', // To place severity bar next to content
     borderRadius: 10,
     backgroundColor: 'rgba(150, 150, 150, 0.1)',
     marginBottom: 15,
+    overflow: 'hidden', // Ensures border radius applies to children
+  },
+  severityBar: {
+    width: 8,
+    height: '100%',
+  },
+  cardContent: {
+    flex: 1,
+    padding: 15,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 5,
   },
   title: {
     flex: 1,
-  },
-  severity: {
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: 'bold',
+  },
+  completedCheckmark: {
+    marginLeft: 8,
   },
   desc: {
     marginBottom: 5,
@@ -200,18 +218,22 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     marginBottom: 10,
   },
-  actions: {
+  actionsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 5,
   },
-  status: {
-    fontWeight: 'bold',
-    fontSize: 12,
+  statusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionButtons: {
+    flexDirection: 'row',
   },
   actionBtn: {
     padding: 5,
+    marginLeft: 10,
   },
   fab: {
     position: 'absolute',

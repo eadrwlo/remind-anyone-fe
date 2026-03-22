@@ -7,7 +7,7 @@
             "developmentClient": true,
             "distribution": "internal",
             "env": {
-                "EXPO_PUBLIC_API_URL": "http://192.168.8.141:8000"
+                "EXPO_PUBLIC_API_URL": "https://remindanyone-284855761753.europe-central2.run.app"
             }
         },
         "preview": {
@@ -16,7 +16,7 @@
                 "buildType": "apk"
             },
             "env": {
-                "EXPO_PUBLIC_API_URL": "https://remindanyone-109055600533.europe-central2.run.app",
+                "EXPO_PUBLIC_API_URL": "https://remindanyone-284855761753.europe-central2.run.app",
                 "EXPO_PUBLIC_ANDROID_CLIENT_ID": "109055600533-i04i5qvni8snlpe3mj08ra5kqu0hm0vf.apps.googleusercontent.com",
                 "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "109055600533-ms8t817jkv0g4svccgu8okfon4l2bnlv.apps.googleusercontent.com"
             }
@@ -27,14 +27,14 @@
                 "simulator": true
             },
             "env": {
-                "EXPO_PUBLIC_API_URL": "https://remindanyone-109055600533.europe-central2.run.app",
+                "EXPO_PUBLIC_API_URL": "https://remindanyone-284855761753.europe-central2.run.app",
                 "EXPO_PUBLIC_ANDROID_CLIENT_ID": "109055600533-i04i5qvni8snlpe3mj08ra5kqu0hm0vf.apps.googleusercontent.com",
                 "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "109055600533-ms8t817jkv0g4svccgu8okfon4l2bnlv.apps.googleusercontent.com"
             }
         },
         "production": {
             "env": {
-                "EXPO_PUBLIC_API_URL": "https://remindanyone-109055600533.europe-central2.run.app",
+                "EXPO_PUBLIC_API_URL": "https://remindanyone-284855761753.europe-central2.run.app",
                 "EXPO_PUBLIC_ANDROID_CLIENT_ID": "109055600533-i04i5qvni8snlpe3mj08ra5kqu0hm0vf.apps.googleusercontent.com",
                 "EXPO_PUBLIC_GOOGLE_CLIENT_ID": "109055600533-ms8t817jkv0g4svccgu8okfon4l2bnlv.apps.googleusercontent.com"
             }
