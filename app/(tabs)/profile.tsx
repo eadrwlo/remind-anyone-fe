@@ -3,27 +3,29 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useAuth } from '@/context/AuthContext';
 import { Image, StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export default function ProfileScreen() {
     const { user, signOut } = useAuth();
+    const { t } = useTranslation();
 
     return (
         <ThemedView style={styles.container}>
-            <ThemedText type="title" style={styles.header}>Profile</ThemedText>
+            <ThemedText type="title" style={styles.header}>{t('profile.title')}</ThemedText>
 
             {user && (
                 <View style={styles.info}>
                     {user.picture && (
                         <Image source={{ uri: user.picture }} style={styles.avatar} />
                     )}
-                    <ThemedText type="subtitle">{user.full_name || 'No Name'}</ThemedText>
+                    <ThemedText type="subtitle">{user.full_name || t('profile.noName')}</ThemedText>
                     <ThemedText>@{user.username}</ThemedText>
                     <ThemedText>{user.email}</ThemedText>
                 </View>
             )}
 
             <View style={styles.actions}>
-                <AppButton title="Sign Out" onPress={signOut} color="#F44336" />
+                <AppButton title={t('profile.signOut')} onPress={signOut} color="#F44336" />
             </View>
         </ThemedView>
     );

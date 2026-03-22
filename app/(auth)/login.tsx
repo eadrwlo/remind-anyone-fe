@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { GoogleSignin, isErrorWithCode, statusCodes } from '@react-native-google-signin/google-signin';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 
@@ -10,6 +11,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 export default function LoginScreen() {
     const { signIn, user, isLoading } = useAuth();
     const router = useRouter();
+    const { t } = useTranslation();
 
     useEffect(() => {
         GoogleSignin.configure({
@@ -62,18 +64,18 @@ export default function LoginScreen() {
                 source={require('@/assets/images/logo.png')}
                 style={styles.logo}
             />
-            <Text style={styles.title}>Remind Anyone</Text>
-            <Text style={styles.subtitle}>Sign in to start sending reminders</Text>
+            <Text style={styles.title}>{t('login.title')}</Text>
+            <Text style={styles.subtitle}>{t('login.subtitle')}</Text>
 
             <AppButton
                 disabled={isLoading}
-                title={isLoading ? "Signing in..." : "Sign in with Google"}
+                title={isLoading ? t('login.signingIn') : t('login.signInGoogle')}
                 onPress={handleGoogleSignIn}
                 color="#4A90D9"
             />
             {__DEV__ && (
                 <AppButton
-                    title="Dev Login (Simulated)"
+                    title={t('login.devLogin')}
                     onPress={() => signIn("test-token")}
                     color="#888"
                     style={{ marginTop: 10 }}
@@ -81,7 +83,7 @@ export default function LoginScreen() {
             )}
 
             <TouchableOpacity onPress={() => router.replace('/(auth)/welcome')} style={styles.learnMore}>
-                <Text style={styles.learnMoreText}>← Learn more about the app</Text>
+                <Text style={styles.learnMoreText}>{t('login.learnMore')}</Text>
             </TouchableOpacity>
         </View>
     );

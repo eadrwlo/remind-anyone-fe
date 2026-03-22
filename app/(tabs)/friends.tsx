@@ -1,5 +1,6 @@
 import { AppButton } from '@/components/app-button';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, FlatList, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -17,6 +18,7 @@ export default function FriendsScreen() {
     const [friends, setFriends] = useState<Friend[]>([]);
     const [newFriendEmail, setNewFriendEmail] = useState('');
     const [loading, setLoading] = useState(false);
+    const { t } = useTranslation();
 
     useEffect(() => {
         fetchFriends();
@@ -36,11 +38,11 @@ export default function FriendsScreen() {
         try {
             setLoading(true);
             await api.post('/friends/', { friend_email_or_username: newFriendEmail });
-            Alert.alert('Success', 'Friend added!');
+            Alert.alert(t('friends.alertSuccessTitle'), t('friends.alertSuccessBody'));
             setNewFriendEmail('');
             fetchFriends();
         } catch (e: any) {
-            Alert.alert('Error', e.response?.data?.detail || 'Failed to add friend');
+            Alert.alert(t('friends.alertErrorTitle'), e.response?.data?.detail || t('friends.alertErrorBody'));
         } finally {
             setLoading(false);
         }
@@ -48,18 +50,18 @@ export default function FriendsScreen() {
 
     return (
         <ThemedView style={styles.container}>
-            <ThemedText type="title" style={styles.header}>My Friends</ThemedText>
+            <ThemedText type="title" style={styles.header}>{t('friends.title')}</ThemedText>
 
             <View style={styles.addFriendContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email or Username"
+                    placeholder={t('friends.placeholder')}
                     value={newFriendEmail}
                     onChangeText={setNewFriendEmail}
                     autoCapitalize="none"
                 />
                 <AppButton
-                    title={loading ? "Adding..." : "Add"}
+                    title={loading ? t('friends.adding') : t('friends.add')}
                     onPress={addFriend}
                     disabled={loading}
                     compact
@@ -77,7 +79,7 @@ export default function FriendsScreen() {
                         <ThemedText style={{ fontSize: 12 }}>{item.email}</ThemedText>
                     </View>
                 )}
-                ListEmptyComponent={<ThemedText>No friends yet.</ThemedText>}
+                ListEmptyComponent={<ThemedText>{t('friends.empty')}</ThemedText>}
             />
         </ThemedView>
     );

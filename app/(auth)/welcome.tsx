@@ -1,6 +1,7 @@
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     Animated,
     FlatList,
@@ -20,13 +21,12 @@ const SLIDES = [
         icon: 'bell.fill' as const,
         iconColor: '#4A90D9',
         accentColor: '#EBF4FF',
-        title: 'Never forget\nanything again',
-        subtitle:
-            'Send reminders to anyone — friends, family, or colleagues. They get notified at the right time, every time.',
+        titleKey: 'welcome.slide1.title',
+        subtitleKey: 'welcome.slide1.subtitle',
         bullets: [
-            { icon: 'checkmark.circle.fill' as const, text: 'Schedule for any date & time' },
-            { icon: 'checkmark.circle.fill' as const, text: 'Add notes and priority levels' },
-            { icon: 'checkmark.circle.fill' as const, text: 'Works across all devices' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide1.bullet1' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide1.bullet2' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide1.bullet3' },
         ],
     },
     {
@@ -34,13 +34,12 @@ const SLIDES = [
         icon: 'person.2.fill' as const,
         iconColor: '#43A047',
         accentColor: '#F0FBF0',
-        title: 'Remind anyone\nin your contacts',
-        subtitle:
-            'Connect with your friends and send them reminders they actually need — birthdays, meetings, tasks, you name it.',
+        titleKey: 'welcome.slide2.title',
+        subtitleKey: 'welcome.slide2.subtitle',
         bullets: [
-            { icon: 'checkmark.circle.fill' as const, text: 'Find friends by username' },
-            { icon: 'checkmark.circle.fill' as const, text: 'See incoming & outgoing reminders' },
-            { icon: 'checkmark.circle.fill' as const, text: 'Mark reminders as completed' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide2.bullet1' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide2.bullet2' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide2.bullet3' },
         ],
     },
     {
@@ -48,13 +47,12 @@ const SLIDES = [
         icon: 'paperplane.fill' as const,
         iconColor: '#8B5CF6',
         accentColor: '#F5F0FF',
-        title: 'Set it and\nforget it',
-        subtitle:
-            'Create a reminder in seconds. Choose the importance, set the date, and let us handle the rest.',
+        titleKey: 'welcome.slide3.title',
+        subtitleKey: 'welcome.slide3.subtitle',
         bullets: [
-            { icon: 'checkmark.circle.fill' as const, text: 'Low, Medium, High priority' },
-            { icon: 'checkmark.circle.fill' as const, text: 'Push notification delivery' },
-            { icon: 'checkmark.circle.fill' as const, text: 'Clean, distraction-free UI' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide3.bullet1' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide3.bullet2' },
+            { icon: 'checkmark.circle.fill' as const, textKey: 'welcome.slide3.bullet3' },
         ],
     },
 ];
@@ -69,6 +67,7 @@ function SlideCard({
     cardWidth: number;
     compact?: boolean;
 }) {
+    const { t } = useTranslation();
     return (
         <View style={[styles.slide, { width: cardWidth }]}>
             {/* Hero icon area */}
@@ -82,15 +81,15 @@ function SlideCard({
 
             {/* Text content */}
             <View style={styles.textContent}>
-                <Text style={[styles.title, compact && styles.titleCompact]}>{item.title}</Text>
-                <Text style={styles.subtitle}>{item.subtitle}</Text>
+                <Text style={[styles.title, compact && styles.titleCompact]}>{t(item.titleKey)}</Text>
+                <Text style={styles.subtitle}>{t(item.subtitleKey)}</Text>
 
                 {/* Bullets */}
                 <View style={styles.bullets}>
-                    {item.bullets.map((b: { icon: typeof SLIDES[0]['bullets'][0]['icon']; text: string }, i: number) => (
+                    {item.bullets.map((b: { icon: typeof SLIDES[0]['bullets'][0]['icon']; textKey: string }, i: number) => (
                         <View key={i} style={styles.bulletRow}>
                             <IconSymbol name={b.icon} size={18} color={item.iconColor} />
-                            <Text style={styles.bulletText}>{b.text}</Text>
+                            <Text style={styles.bulletText}>{t(b.textKey)}</Text>
                         </View>
                     ))}
                 </View>
@@ -103,14 +102,15 @@ function SlideCard({
 function DesktopWelcome() {
     const router = useRouter();
     const { width } = useWindowDimensions();
+    const { t } = useTranslation();
     const cardWidth = Math.min(320, (width - 120) / 3);
 
     return (
         <View style={styles.desktopContainer}>
             {/* Header */}
             <View style={styles.desktopHeader}>
-                <Text style={styles.desktopAppName}>Remind Anyone</Text>
-                <Text style={styles.desktopTagline}>The easiest way to send reminders to people you care about.</Text>
+                <Text style={styles.desktopAppName}>{t('welcome.desktop.appName')}</Text>
+                <Text style={styles.desktopTagline}>{t('welcome.desktop.tagline')}</Text>
             </View>
 
             {/* Cards row */}
@@ -128,7 +128,7 @@ function DesktopWelcome() {
                 onPress={() => router.replace('/(auth)/login')}
                 activeOpacity={0.85}
             >
-                <Text style={styles.btnText}>Get Started</Text>
+                <Text style={styles.btnText}>{t('welcome.getStarted')}</Text>
                 <IconSymbol name="chevron.right" size={18} color="#fff" />
             </TouchableOpacity>
         </View>
@@ -139,6 +139,7 @@ function DesktopWelcome() {
 function MobileWelcome() {
     const router = useRouter();
     const { width } = useWindowDimensions();
+    const { t } = useTranslation();
     const [activeIndex, setActiveIndex] = useState(0);
     const flatListRef = useRef<FlatList>(null);
     const scrollX = useRef(new Animated.Value(0)).current;
@@ -214,14 +215,14 @@ function MobileWelcome() {
                     onPress={goToNext}
                     activeOpacity={0.85}
                 >
-                    <Text style={styles.btnText}>{isLast ? 'Get Started' : 'Next'}</Text>
+                    <Text style={styles.btnText}>{isLast ? t('welcome.getStarted') : t('welcome.next')}</Text>
                     <IconSymbol name="chevron.right" size={18} color="#fff" />
                 </TouchableOpacity>
 
                 {/* Skip */}
                 {!isLast && (
                     <TouchableOpacity onPress={() => router.replace('/(auth)/login')} style={styles.skip}>
-                        <Text style={styles.skipText}>Skip</Text>
+                        <Text style={styles.skipText}>{t('welcome.skip')}</Text>
                     </TouchableOpacity>
                 )}
             </View>

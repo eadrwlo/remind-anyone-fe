@@ -49,3 +49,7 @@ app-example
 
 # firebase credentials
 *firebase-adminsdk*.json
+
+
+# AI artifacts
+plans/

@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FlatList, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -28,6 +29,7 @@ export default function RemindersScreen() {
   const { user } = useAuth();
   const router = useRouter();
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
 
   const fetchReminders = async () => {
     try {
@@ -81,7 +83,7 @@ export default function RemindersScreen() {
 
         {item.description && <ThemedText style={styles.desc}>{item.description}</ThemedText>}
 
-        <ThemedText style={styles.date}>Due: {new Date(item.due_date).toLocaleString()}</ThemedText>
+        <ThemedText style={styles.date}>{t('reminders.due')}{new Date(item.due_date).toLocaleString()}</ThemedText>
 
         <View style={styles.actionsRow}>
           <View style={styles.statusContainer}>
@@ -112,12 +114,12 @@ export default function RemindersScreen() {
         <TouchableOpacity
           style={[styles.tab, activeTab === 'received' && styles.activeTab]}
           onPress={() => setActiveTab('received')}>
-          <ThemedText style={activeTab === 'received' ? styles.activeTabText : undefined}>Incoming</ThemedText>
+          <ThemedText style={activeTab === 'received' ? styles.activeTabText : undefined}>{t('reminders.incoming')}</ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tab, activeTab === 'sent' && styles.activeTab]}
           onPress={() => setActiveTab('sent')}>
-          <ThemedText style={activeTab === 'sent' ? styles.activeTabText : undefined}>Outgoing</ThemedText>
+          <ThemedText style={activeTab === 'sent' ? styles.activeTabText : undefined}>{t('reminders.outgoing')}</ThemedText>
         </TouchableOpacity>
       </View>
 
@@ -127,7 +129,7 @@ export default function RemindersScreen() {
         keyExtractor={item => item.id.toString()}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchReminders} />}
         contentContainerStyle={styles.list}
-        ListEmptyComponent={<ThemedText style={styles.empty}>No reminders found.</ThemedText>}
+        ListEmptyComponent={<ThemedText style={styles.empty}>{t('reminders.empty')}</ThemedText>}
         extraData={activeTab} // ensure re-render on tab switch
       />
 

@@ -2,6 +2,7 @@ import { AppButton } from '@/components/app-button';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -27,6 +28,7 @@ export default function CreateReminderScreen() {
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
+    const { t } = useTranslation();
 
     useEffect(() => {
         // Set default due date to tomorrow, same time as now
@@ -75,7 +77,7 @@ export default function CreateReminderScreen() {
 
     const createReminder = async () => {
         if (!title || !selectedFriendId) {
-            Alert.alert('Error', 'Please fill all required fields');
+            Alert.alert(t('createReminder.alertError'), t('createReminder.alertFillFields'));
             return;
         }
 
@@ -90,7 +92,7 @@ export default function CreateReminderScreen() {
             });
             router.back();
         } catch (e: any) {
-            Alert.alert('Error', e.response?.data?.detail || 'Failed to create reminder');
+            Alert.alert(t('createReminder.alertError'), e.response?.data?.detail || t('createReminder.alertFailed'));
         } finally {
             setLoading(false);
         }
@@ -105,17 +107,17 @@ export default function CreateReminderScreen() {
     return (
         <ThemedView style={styles.container}>
             <ScrollView>
-                <ThemedText type="title" style={styles.header}>New Reminder</ThemedText>
+                <ThemedText type="title" style={styles.header}>{t('createReminder.title')}</ThemedText>
 
-                <ThemedText style={styles.label}>Title *</ThemedText>
+                <ThemedText style={styles.label}>{t('createReminder.titleLabel')}</ThemedText>
                 <TextInput
                     style={styles.input}
                     value={title}
                     onChangeText={setTitle}
-                    placeholder="Reminder title"
+                    placeholder={t('createReminder.titlePlaceholder')}
                 />
 
-                <ThemedText style={styles.label}>Description</ThemedText>
+                <ThemedText style={styles.label}>{t('createReminder.descriptionLabel')}</ThemedText>
                 <TextInput
                     style={styles.input}
                     value={description}
@@ -123,7 +125,7 @@ export default function CreateReminderScreen() {
                     multiline
                 />
 
-                <ThemedText style={styles.label}>Due Date *</ThemedText>
+                <ThemedText style={styles.label}>{t('createReminder.dueDateLabel')}</ThemedText>
 
                 {Platform.OS === 'web' ? (
                     // @ts-ignore: React Native Web supports this but types might complain
@@ -176,7 +178,7 @@ export default function CreateReminderScreen() {
                     </View>
                 )}
 
-                <ThemedText style={styles.label}>Severity</ThemedText>
+                <ThemedText style={styles.label}>{t('createReminder.severityLabel')}</ThemedText>
                 <View style={styles.severityContainer}>
                     {(['Low', 'Medium', 'High'] as const).map(s => {
                         const color = getSeverityColor(s);
@@ -195,13 +197,13 @@ export default function CreateReminderScreen() {
                                 <ThemedText style={[
                                     styles.severityLabel,
                                     { color: isActive ? '#fff' : color },
-                                ]}>{s}</ThemedText>
+                                ]}>{t(`createReminder.severity${s}`)}</ThemedText>
                             </TouchableOpacity>
                         );
                     })}
                 </View>
 
-                <ThemedText style={styles.label}>Select Friend *</ThemedText>
+                <ThemedText style={styles.label}>{t('createReminder.selectFriendLabel')}</ThemedText>
                 <View style={styles.friendsList}>
                     {friends.map(friend => (
                         <TouchableOpacity
@@ -212,13 +214,13 @@ export default function CreateReminderScreen() {
                             <ThemedText>{friend.username}</ThemedText>
                         </TouchableOpacity>
                     ))}
-                    {friends.length === 0 && <ThemedText>No friends found. Add some first!</ThemedText>}
+                    {friends.length === 0 && <ThemedText>{t('createReminder.noFriends')}</ThemedText>}
                 </View>
 
                 <View style={styles.spacer} />
 
                 <AppButton
-                    title={loading ? "Creating..." : "Send Reminder"}
+                    title={loading ? t('createReminder.creating') : t('createReminder.send')}
                     onPress={createReminder}
                     disabled={loading}
                     color="#0a7ea4"

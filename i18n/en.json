@@ -1,0 +1,85 @@
+{
+  "welcome": {
+    "slide1": {
+      "title": "Never forget\nanything again",
+      "subtitle": "Send reminders to anyone — friends, family, or colleagues. They get notified at the right time, every time.",
+      "bullet1": "Schedule for any date & time",
+      "bullet2": "Add notes and priority levels",
+      "bullet3": "Works across all devices"
+    },
+    "slide2": {
+      "title": "Remind anyone\nin your contacts",
+      "subtitle": "Connect with your friends and send them reminders they actually need — birthdays, meetings, tasks, you name it.",
+      "bullet1": "Find friends by username",
+      "bullet2": "See incoming & outgoing reminders",
+      "bullet3": "Mark reminders as completed"
+    },
+    "slide3": {
+      "title": "Set it and\nforget it",
+      "subtitle": "Create a reminder in seconds. Choose the importance, set the date, and let us handle the rest.",
+      "bullet1": "Low, Medium, High priority",
+      "bullet2": "Push notification delivery",
+      "bullet3": "Clean, distraction-free UI"
+    },
+    "desktop": {
+      "appName": "Remind Anyone",
+      "tagline": "The easiest way to send reminders to people you care about."
+    },
+    "getStarted": "Get Started",
+    "next": "Next",
+    "skip": "Skip"
+  },
+  "login": {
+    "title": "Remind Anyone",
+    "subtitle": "Sign in to start sending reminders",
+    "signInGoogle": "Sign in with Google",
+    "signingIn": "Signing in...",
+    "devLogin": "Dev Login (Simulated)",
+    "learnMore": "← Learn more about the app"
+  },
+  "tabs": {
+    "reminders": "Reminders",
+    "friends": "Friends",
+    "profile": "Profile"
+  },
+  "reminders": {
+    "incoming": "Incoming",
+    "outgoing": "Outgoing",
+    "empty": "No reminders found.",
+    "due": "Due: "
+  },
+  "friends": {
+    "title": "My Friends",
+    "placeholder": "Email or Username",
+    "adding": "Adding...",
+    "add": "Add",
+    "alertSuccessTitle": "Success",
+    "alertSuccessBody": "Friend added!",
+    "alertErrorTitle": "Error",
+    "alertErrorBody": "Failed to add friend",
+    "empty": "No friends yet."
+  },
+  "profile": {
+    "title": "Profile",
+    "noName": "No Name",
+    "signOut": "Sign Out"
+  },
+  "createReminder": {
+    "title": "New Reminder",
+    "titleLabel": "Title *",
+    "titlePlaceholder": "Reminder title",
+    "descriptionLabel": "Description",
+    "dueDateLabel": "Due Date *",
+    "severityLabel": "Severity",
+    "severityLow": "Low",
+    "severityMedium": "Medium",
+    "severityHigh": "High",
+    "selectFriendLabel": "Select Friend *",
+    "noFriends": "No friends found. Add some first!",
+    "creating": "Creating...",
+    "send": "Send Reminder",
+    "alertError": "Error",
+    "alertFillFields": "Please fill all required fields",
+    "alertFailed": "Failed to create reminder"
+  }
+}

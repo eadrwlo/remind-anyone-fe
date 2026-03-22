@@ -1,0 +1,85 @@
+{
+  "welcome": {
+    "slide1": {
+      "title": "Nigdy więcej\nniczego nie zapomnisz",
+      "subtitle": "Wysyłaj przypomnienia do każdego — przyjaciół, rodziny lub współpracowników. Otrzymają powiadomienie we właściwym czasie, za każdym razem.",
+      "bullet1": "Zaplanuj na dowolną datę i godzinę",
+      "bullet2": "Dodawaj notatki i poziomy priorytetów",
+      "bullet3": "Działa na wszystkich urządzeniach"
+    },
+    "slide2": {
+      "title": "Przypomnij każdemu\nze swoich kontaktów",
+      "subtitle": "Połącz się ze swoimi znajomymi i wysyłaj im przypomnienia, których naprawdę potrzebują — urodziny, spotkania, zadania, co tylko chcesz.",
+      "bullet1": "Znajdź znajomych po nazwie użytkownika",
+      "bullet2": "Zobacz przychodzące i wychodzące przypomnienia",
+      "bullet3": "Oznaczaj przypomnienia jako ukończone"
+    },
+    "slide3": {
+      "title": "Ustaw i\nzapomnij",
+      "subtitle": "Utwórz przypomnienie w kilka sekund. Wybierz ważność, ustaw datę, a my zajmiemy się resztą.",
+      "bullet1": "Priorytet Niski, Średni, Wysoki",
+      "bullet2": "Dostarczanie powiadomień push",
+      "bullet3": "Czysty, wolny od rozpraszaczy interfejs użytkownika"
+    },
+    "desktop": {
+      "appName": "Przypomnij Każdemu",
+      "tagline": "Najprostszy sposób na wysyłanie przypomnień do osób, na których Ci zależy."
+    },
+    "getStarted": "Rozpocznij",
+    "next": "Dalej",
+    "skip": "Pomiń"
+  },
+  "login": {
+    "title": "Przypomnij Każdemu",
+    "subtitle": "Zaloguj się, aby zacząć wysyłać przypomnienia",
+    "signInGoogle": "Zaloguj się przez Google",
+    "signingIn": "Logowanie...",
+    "devLogin": "Logowanie Dev (Symulowane)",
+    "learnMore": "← Dowiedz się więcej o aplikacji"
+  },
+  "tabs": {
+    "reminders": "Zadania",
+    "friends": "Znajomi",
+    "profile": "Profil"
+  },
+  "reminders": {
+    "incoming": "Przychodzące",
+    "outgoing": "Wychodzące",
+    "empty": "Brak przypomnień.",
+    "due": "Termin: "
+  },
+  "friends": {
+    "title": "Moi Znajomi",
+    "placeholder": "Email lub Nazwa Użytkownika",
+    "adding": "Dodawanie...",
+    "add": "Dodaj",
+    "alertSuccessTitle": "Sukces",
+    "alertSuccessBody": "Dodano znajomego!",
+    "alertErrorTitle": "Błąd",
+    "alertErrorBody": "Nie udało się dodać",
+    "empty": "Brak znajomych."
+  },
+  "profile": {
+    "title": "Profil",
+    "noName": "Brak Imienia",
+    "signOut": "Wyloguj Się"
+  },
+  "createReminder": {
+    "title": "Nowe Przypomnienie",
+    "titleLabel": "Tytuł *",
+    "titlePlaceholder": "Tytuł przypomnienia",
+    "descriptionLabel": "Opis",
+    "dueDateLabel": "Data i Czas *",
+    "severityLabel": "Ważność",
+    "severityLow": "Niska",
+    "severityMedium": "Średnia",
+    "severityHigh": "Wysoka",
+    "selectFriendLabel": "Wybierz Znajomego *",
+    "noFriends": "Brak znajomych. Najpierw dodaj kogoś!",
+    "creating": "Tworzenie...",
+    "send": "Wyślij Przypomnienie",
+    "alertError": "Błąd",
+    "alertFillFields": "Proszę wypełnić wszystkie pola",
+    "alertFailed": "Nie udało się utworzyć"
+  }
+}
