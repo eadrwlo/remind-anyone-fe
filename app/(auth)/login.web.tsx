@@ -4,7 +4,7 @@ import * as Google from 'expo-auth-session/providers/google';
 import { useRouter } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { useEffect } from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -68,6 +68,10 @@ export default function LoginScreen() {
                     onPress={() => signIn("test-token")}
                 />
             )}
+
+            <TouchableOpacity onPress={() => router.replace('/(auth)/welcome')} style={styles.learnMore}>
+                <Text style={styles.learnMoreText}>← Learn more about the app</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -95,5 +99,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#666',
         marginBottom: 30,
+    },
+    learnMore: {
+        marginTop: 24,
+        paddingVertical: 6,
+    },
+    learnMoreText: {
+        color: '#888',
+        fontSize: 14,
     },
 });

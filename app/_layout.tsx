@@ -41,7 +41,7 @@ function RootLayoutNav() {
 
     if (!user && !inAuthGroup) {
       // Redirect to the sign-in page.
-      router.replace('/(auth)/login');
+      router.replace('/(auth)/welcome');
     } else if (user && inAuthGroup) {
       // Redirect away from the sign-in page.
       router.replace('/(tabs)');
@@ -63,6 +63,7 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)/welcome" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
         <Stack.Screen name="reminders/create" options={{ presentation: 'modal', title: 'New Reminder' }} />
         <Stack.Screen name="+not-found" />
